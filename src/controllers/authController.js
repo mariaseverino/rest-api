@@ -9,8 +9,16 @@ module.exports = {
     },
 
     async create(req, res, next){
+
+        const {email} = req.body
+
         try{
-            const {name, email} = req.body
+            const user = await knex('user').where('email', email)
+
+            if (user.email == email){
+                return res.status(400).send({error: 'User already exists'})
+            }
+            const {name} = req.body
 
             const hash = await bcrypt.hash(req.body.password, 10)
             
@@ -19,11 +27,11 @@ module.exports = {
                 email,
                 password: hash,
             })
-            return res.json('success')
+            
+            return res.json('Success')
         }
         catch(err){
-            return res.send({failed: 'somethig wrong'})
+            return res.status(400).send({error: 'Registration failed'})
         }
     }
 }
-bcrypt.js
