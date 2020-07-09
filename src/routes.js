@@ -1,9 +1,9 @@
 const express = require('express')
 const routes = express.Router()
 
-const UserController = require('./controllers/authController')
+const RegisterController = require('./controllers/registerController')
 
-routes.get('/auth/register', UserController.index)
-    .post('/auth/register', UserController.create)
+routes.get('/auth/register', RegisterController.index)
+    .post('/auth/register', RegisterController.create)
 
 module.exports = routes
