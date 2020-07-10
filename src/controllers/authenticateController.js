@@ -1,6 +1,7 @@
 const knex = require('../database/connections')
 const bcrypt = require('bcryptjs')
-
+const jwt = require('jsonwebtoken')
+const authConfig = require('../config/auth.json')
 
 module.exports = {
 
@@ -19,6 +20,10 @@ module.exports = {
         }
         user.password = undefined
 
-        return res.send({user})
+        const token = jwt.sign({id: user.id}, authConfig.secret, {
+            expiresIn: 86400
+        })
+
+        return res.send({user, token})
     }
 }

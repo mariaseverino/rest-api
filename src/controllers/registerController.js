@@ -1,11 +1,20 @@
 const bcrypt = require('bcryptjs')
 const knex = require('../database/connections')
+const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 
 module.exports = {
 
     async index(req, res){
-        const user = await knex('user').select('*')
-        return res.json(user)
+        
+        const user = await knex('user').select('*').first()
+        
+        user.password = undefined
+
+        const token = jwt.sign({id: user.id}, authConfig.secret, {
+            expiresIn: 86400
+        })
+        return res.send({user, token})
     },
 
     async create(req, res){
@@ -21,8 +30,11 @@ module.exports = {
             }
 
             const hash = await bcrypt.hash(password, 10)
-                
+            
+            const id = crypto.randomBytes(5).toString('hex');
+
             await knex('user').insert({
+                id,
                 name,
                 email,
                 password: hash,
