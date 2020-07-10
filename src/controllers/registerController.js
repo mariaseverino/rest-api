@@ -3,31 +3,31 @@ const knex = require('../database/connections')
 
 module.exports = {
 
-    async index(req, res, next){
+    async index(req, res){
         const user = await knex('user').select('*')
         return res.json(user)
     },
 
-    async create(req, res, next){
+    async create(req, res){
 
-        const {email} = req.body
+        const {name, email, password} = req.body
 
         try{
-            const user = await knex('user').where('email', email)
 
-            if (user.email == email){
+            const user = await knex('user').where('email', email).select('*').first()
+                
+            if (user){
                 return res.status(400).send({error: 'User already exists'})
             }
-            const {name} = req.body
 
-            const hash = await bcrypt.hash(req.body.password, 10)
-            
+            const hash = await bcrypt.hash(password, 10)
+                
             await knex('user').insert({
                 name,
                 email,
                 password: hash,
             })
-            
+
             return res.json('Success')
         }
         catch(err){
