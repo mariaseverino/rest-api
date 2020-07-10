@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 const knex = require('../database/connections')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
+const authConfig = require('../config/auth.json')
+
 
 module.exports = {
 

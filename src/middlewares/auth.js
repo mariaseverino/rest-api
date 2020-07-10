@@ -5,13 +5,13 @@ module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization
 
     if (!authHeader){
-        return resizeBy.status(401).send({error: 'No token provided'})
+        return res.status(401).send({error: 'No token provided'})
     }
 
-    const parts = authHeader.split('');
+    const parts = authHeader.split(' ');
 
-    if (!parts.length == 2){
-        return resizeBy.status(400).send({error: 'Token error'})
+    if (!parts.length === 2){
+        return res.status(401).send({error: 'Token error'})
     }
     
     const [scheme, token] = parts
@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
     jwt.verify(token, authConfig.secret, (err, decoded) => {
         
         if (err){
-            return res.send(4001).send({error: 'Token invalid'})
+            return res.send(401).send({error: 'Token invalid'})
         }
 
         req.userId = decoded.id

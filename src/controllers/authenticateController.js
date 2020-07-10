@@ -5,6 +5,10 @@ const authConfig = require('../config/auth.json')
 
 module.exports = {
 
+    async index(req, res){
+        res.send({ok: true, user: req.userId})
+    },
+
     async create(req, res){
 
         const { email, password } = req.body
