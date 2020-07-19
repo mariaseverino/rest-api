@@ -1,31 +1,24 @@
 const bcrypt = require('bcryptjs')
 const knex = require('../database/connections')
 const crypto = require('crypto')
-const jwt = require('jsonwebtoken')
-const authConfig = require('../config/auth.json')
-
 
 module.exports = {
 
     async index(req, res){
         
-        const user = await knex('user').select('*').first()
-        
-        user.password = undefined
-
-        const token = jwt.sign({id: user.id}, authConfig.secret, {
-            expiresIn: 86400
-        })
-        return res.send({user, token})
+        const user = await knex('user').select('id', 'name', 'email')
+        return res.send({ user })
     },
 
     async create(req, res){
 
-        const {name, email, password} = req.body
+        const { name, email, password } = req.body
 
         try{
-
-            const user = await knex('user').where('email', email).select('*').first()
+            const user = await knex('user')
+                .where('email', email)
+                .select('*')
+                .first()
                 
             if (user){
                 return res.status(400).send({error: 'User already exists'})
@@ -42,10 +35,10 @@ module.exports = {
                 password: hash,
             })
 
-            return res.json('Success')
+            return res.json({ message: 'Success' })
         }
         catch(err){
-            return res.status(400).send({error: 'Registration failed'})
+            res.status(400).send({ error: err.message })
         }
     }
 }
