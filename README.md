@@ -42,3 +42,6 @@ $ yarn install
 # Run
 $ npm start
 ```
+<h6 align="center">
+made with ❤
+</h6>
