@@ -21,7 +21,12 @@ module.exports = {
 
             now.setHours(now.getHours() + 1)
             
-            await knex('user').where('email', email).update('password', token)
+            await knex('user').where('email', email).update({
+                passwordResetToken: token,
+                passwordResetExpires: now
+            })
+
+            console.log(token, now)
             const testAccount = await nodemailer.createTestAccount();
 
             const transporter = await nodemailer.createTransport({
@@ -44,11 +49,11 @@ module.exports = {
             console.log("Message sent: %s", info.messageId)
             console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info))
 
-            return res.send({ message: 'Email successfully sent' })
-
+            return res.send()
         }
         catch(err){
-            res.status(400).send({ error: err.message })
+            console.log({ error: err.message })
+            return res.status(400).send({error: 'Error on forgot password, try again'})
         }
     }
 }

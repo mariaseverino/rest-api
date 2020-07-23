@@ -37,7 +37,8 @@ module.exports = {
             return res.send({ user, token })
         }
         catch(err){
-            res.status(400).send({ error: err.message })
+            console.log({ error: err.message })
+            return res.status(400).send({ error: 'Error on authenticate, try again' })
         }
     }
 }

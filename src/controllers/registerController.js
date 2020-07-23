@@ -6,7 +6,7 @@ module.exports = {
 
     async index(req, res){
         
-        const user = await knex('user').select('id', 'name', 'email')
+        const user = await knex('user').select('*')
         return res.send({ user })
     },
 
@@ -35,10 +35,11 @@ module.exports = {
                 password: hash,
             })
 
-            return res.json({ message: 'Success' })
+            return res.send()
         }
         catch(err){
-            res.status(400).send({ error: err.message })
+            console.log({ error: err.message })
+            return res.status(400).send({ error: 'Registration failed, try again' })
         }
     }
 }

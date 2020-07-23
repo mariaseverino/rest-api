@@ -14,7 +14,8 @@
 - [x] Authenticate
 - [x] Forgot Password
 - [x] Send Email
-- [ ] Password Reset
+- [x] Password Reset
+- [ ] Improvements
 
 ### :zap: Technologies
 
